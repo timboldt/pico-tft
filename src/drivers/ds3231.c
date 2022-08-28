@@ -34,8 +34,16 @@ bool ds3231_fetch_time(i2c_inst_t *i2c, struct tm *t) {
     t->tm_mon = bcd2bin(buffer[5] & 0x1f) - 1;
     t->tm_mday = bcd2bin(buffer[4]);
     t->tm_wday = bcd2bin(buffer[3]) - 1;
-    // TODO: Handle 12-hour.
-    t->tm_hour = bcd2bin(buffer[2] & 0x3f);
+    if ((buffer[2] & 0x40) != 0) {
+        // 12-hour mode.
+        t->tm_hour = bcd2bin(buffer[2] & 0x1f);
+        if ((buffer[2] & 0x20) != 0) {
+            t->tm_hour += 12;
+        }
+    } else {
+        // 24-hour mode.
+        t->tm_hour = bcd2bin(buffer[2] & 0x3f);
+    }
     t->tm_min = bcd2bin(buffer[1]);
     t->tm_sec = bcd2bin(buffer[0]);
     return true;
