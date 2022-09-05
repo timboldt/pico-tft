@@ -1,3 +1,7 @@
 [submodule "pico-sdk"]
 	path = pico-sdk
 	url = https://github.com/timboldt/pico-sdk
+[submodule "lvgl"]
+	path = lvgl
+	url = https://github.com/lvgl/lvgl.git
+	branch = release/v8.3
