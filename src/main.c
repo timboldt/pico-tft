@@ -18,6 +18,7 @@
 #include "hardware/i2c.h"
 //#include "pico/binary_info.h"
 #include "pico/stdlib.h"
+#include "lvgl.h"
 
 #define FEATHER_I2C_BUS i2c1
 #define FEATHER_I2C_SDA_PIN 2
@@ -35,12 +36,16 @@ void init_i2c_bus(void) {
 int main() {
     stdio_init_all();
     init_i2c_bus();
+    lv_init();
 
     while (true) {
         struct tm now = {};
         ds3231_fetch_time(FEATHER_I2C_BUS, &now);
         printf("%s\n", asctime(&now));
-        sleep_ms(1000);
+
+        lv_timer_handler();
+        sleep_ms(10);
+        lv_tick_inc(10);
     }
     return 0;
 }

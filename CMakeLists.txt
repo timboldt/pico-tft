@@ -6,7 +6,13 @@ include(pico-sdk/pico_sdk_init.cmake)
 
 project(picotft)
 
-# initialize the Raspberry Pi Pico SDK
+# Initialize the Raspberry Pi Pico SDK.
 pico_sdk_init()
+
+# Set up LVGL graphics library.
+set(LV_CONF_PATH
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/lv_conf.h
+    CACHE STRING "" FORCE)
+add_subdirectory(lvgl)
 
 add_subdirectory(src)
