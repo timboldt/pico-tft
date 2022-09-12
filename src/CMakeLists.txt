@@ -5,6 +5,7 @@ if (TARGET tinyusb_device)
     target_sources(app PRIVATE main.c)
     target_include_directories(app PRIVATE "${PROJECT_SOURCE_DIR}")
     add_subdirectory(drivers)
+    add_subdirectory(network)
     target_link_libraries(app
         pico_stdlib
         pico_cyw43_arch_lwip_threadsafe_background

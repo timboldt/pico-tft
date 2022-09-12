@@ -17,9 +17,8 @@
 // #include "drivers/ds3231.h"
 // #include "hardware/i2c.h"
 #include "lvgl.h"
-#include "pico/cyw43_arch.h"
+#include "network/wifi.h"
 #include "pico/stdlib.h"
-#include "secrets.h"
 
 // #define FEATHER_I2C_BUS i2c1
 // #define FEATHER_I2C_SDA_PIN 2
@@ -34,41 +33,20 @@
 //     gpio_pull_up(FEATHER_I2C_SCL_PIN);
 // }
 
-void init_wifi(void) {
-    printf("cyw43_arch_init_with_country()...\n");
-    if (cyw43_arch_init_with_country(CYW43_COUNTRY_USA)) {
-        printf("cyw43_arch_init_with_country() failed.\n");
-        return;
-    }
-
-    printf("cyw43_arch_enable_sta_mode()...\n");
-    cyw43_arch_enable_sta_mode();
-
-    printf("cyw43_arch_wifi_connect_async()...\n");
-    int err = cyw43_arch_wifi_connect_async(
-        WIFI_SSID, WIFI_PASSWORD, CYW43_AUTH_WPA2_AES_PSK);
-    if (err) {
-        printf("cyw43_arch_wifi_connect_async() failed: %d\n", err);
-        return;
-    }
-}
-
 int main() {
     stdio_init_all();
-    // init_i2c_bus();
+    wifi_init();
     lv_init();
-
-    sleep_ms(5000);
-    init_wifi();
+    // init_i2c_bus();
 
     while (true) {
-        cyw43_arch_poll();
+        wifi_tick();
 
         // struct tm now = {};
         // ds3231_fetch_time(FEATHER_I2C_BUS, &now);
         // printf("%s\n", asctime(&now));
 
-        printf("WiFi status: %d\n", cyw43_wifi_link_status(&cyw43_state, CYW43_ITF_STA));
+        printf("WiFi status: %d\n", wifi_connected());
         sleep_ms(100);
 
         // These don't belong here. (Part of it needs to go in a timer
