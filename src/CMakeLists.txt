@@ -5,7 +5,11 @@ if (TARGET tinyusb_device)
     target_sources(app PRIVATE main.c)
     target_include_directories(app PRIVATE "${PROJECT_SOURCE_DIR}")
     add_subdirectory(drivers)
-    target_link_libraries(app pico_stdlib hardware_i2c lvgl::lvgl)
+    target_link_libraries(app
+        pico_stdlib
+        pico_cyw43_arch_lwip_threadsafe_background
+        hardware_i2c
+        lvgl::lvgl)
 
     # enable usb output, disable uart output
     pico_enable_stdio_usb(app 1)

@@ -17,8 +17,10 @@
 //#include "drivers/ds3231.h"
 #include "hardware/i2c.h"
 //#include "pico/binary_info.h"
-#include "pico/stdlib.h"
 #include "lvgl.h"
+#include "pico/cyw43_arch.h"
+#include "pico/stdlib.h"
+#include "secrets.h"
 
 #define FEATHER_I2C_BUS i2c1
 #define FEATHER_I2C_SDA_PIN 2
@@ -38,17 +40,36 @@ int main() {
     init_i2c_bus();
     lv_init();
 
+    sleep_ms(5000);
+
+    printf("cyw43_arch_init_with_country()...\n");
+    if (cyw43_arch_init_with_country(CYW43_COUNTRY_USA)) {
+        printf("cyw43_arch_init_with_country() failed.\n");
+        return 1;
+    }
+
+    printf("cyw43_arch_enable_sta_mode()...\n");
+    cyw43_arch_enable_sta_mode();
+
+    printf("cyw43_arch_wifi_connect_timeout_ms()...\n");
+    int err = cyw43_arch_wifi_connect_timeout_ms(
+        WIFI_SSID, WIFI_PASSWORD, CYW43_AUTH_WPA2_AES_PSK, 10000);
+    if (err) {
+        printf("cyw43_arch_wifi_connect_timeout_ms() failed: %d\n", err);
+        return 1;
+    }
+    printf("WiFi connected.\n");
+
     while (true) {
-        //struct tm now = {};
-        //ds3231_fetch_time(FEATHER_I2C_BUS, &now);
-        //printf("%s\n", asctime(&now));
+        // struct tm now = {};
+        // ds3231_fetch_time(FEATHER_I2C_BUS, &now);
+        // printf("%s\n", asctime(&now));
 
         printf("Tick!\n");
         sleep_ms(1000);
 
-        // These don't belong here. (Part of it needs to go in a timer callback.)
-        // lv_timer_handler();
-        // lv_tick_inc(10);
+        // These don't belong here. (Part of it needs to go in a timer
+        // callback.) lv_timer_handler(); lv_tick_inc(10);
     }
     return 0;
 }
