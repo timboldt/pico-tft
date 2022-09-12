@@ -20,3 +20,28 @@
 #include "pico/stdlib.h"
 
 bool ds3231_fetch_time(i2c_inst_t *i2, struct tm *t);
+
+// Usage example, since I didn't know where to put the test code for now:
+//
+// #include "drivers/ds3231.h"
+// #include "hardware/i2c.h"
+//
+// #define FEATHER_I2C_BUS i2c1
+// #define FEATHER_I2C_SDA_PIN 2
+// #define FEATHER_I2C_SCL_PIN 3
+//
+// void init_i2c_bus(void) {
+//     const uint baudrate_khz = 100;
+//     i2c_init(FEATHER_I2C_BUS, baudrate_khz * 1000);
+//     gpio_set_function(FEATHER_I2C_SDA_PIN, GPIO_FUNC_I2C);
+//     gpio_set_function(FEATHER_I2C_SCL_PIN, GPIO_FUNC_I2C);
+//     gpio_pull_up(FEATHER_I2C_SDA_PIN);
+//     gpio_pull_up(FEATHER_I2C_SCL_PIN);
+// }
+//
+// And then in main():
+//
+// init_i2c_bus();
+// struct tm now = {};
+// ds3231_fetch_time(FEATHER_I2C_BUS, &now);
+// printf("%s\n", asctime(&now));
