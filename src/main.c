@@ -14,7 +14,7 @@
 
 #include <stdio.h>
 
-#include "drivers/ds3231.h"
+//#include "drivers/ds3231.h"
 #include "hardware/i2c.h"
 //#include "pico/binary_info.h"
 #include "pico/stdlib.h"
@@ -39,13 +39,16 @@ int main() {
     lv_init();
 
     while (true) {
-        struct tm now = {};
-        ds3231_fetch_time(FEATHER_I2C_BUS, &now);
-        printf("%s\n", asctime(&now));
+        //struct tm now = {};
+        //ds3231_fetch_time(FEATHER_I2C_BUS, &now);
+        //printf("%s\n", asctime(&now));
 
-        lv_timer_handler();
-        sleep_ms(10);
-        lv_tick_inc(10);
+        printf("Tick!\n");
+        sleep_ms(1000);
+
+        // These don't belong here. (Part of it needs to go in a timer callback.)
+        // lv_timer_handler();
+        // lv_tick_inc(10);
     }
     return 0;
 }
