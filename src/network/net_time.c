@@ -17,8 +17,7 @@ void nettime_init(void) {
     rtc_init();
     sntp_setoperatingmode(SNTP_OPMODE_POLL);
     sntp_init();
-    sntp_setservername(0, "pool.ntp.org");
-    
+    //sntp_setservername(0, "pool.ntp.org");
 }
 
 void nettime_set_system_time(uint32_t sec) {
