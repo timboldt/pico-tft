@@ -13,19 +13,47 @@
 //  limitations under the License.
 
 #include <stdio.h>
+#include <time.h>
 
+#include "pico.h"
+
+#include "hardware/rtc.h"
 #include "lvgl.h"
 #include "network/wifi.h"
+#include "network/net_time.h"
 #include "pico/stdlib.h"
 
 int main() {
     stdio_init_all();
+
     wifi_init();
+    for (int cnt = 0; cnt < 100; cnt++) {
+        wifi_tick();
+        if (wifi_connected()) {
+            printf("WiFi connected!\n");
+            break;
+        }
+        if (cnt % 10 == 0) {
+            printf("Waiting for WiFi (%d)\n", cnt);
+        }
+        sleep_ms(100);
+    }
+
+    nettime_init();
     lv_init();
 
     while (true) {
         wifi_tick();
-        printf("WiFi status: %d\n", wifi_connected());
+
+        static int cnt = 0;
+        cnt++;
+        if (cnt % 10 == 0) {
+            printf("WiFi status: %d\n", wifi_connected());
+
+            datetime_t dt = {};
+            rtc_get_datetime(&dt);
+            printf("Time: %04d-%02d-%02d %02d:%02d:%02d\n", dt.year, dt.month, dt.day, dt.hour, dt.min, dt.sec);
+        }
 
         sleep_ms(100);
 

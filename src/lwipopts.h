@@ -87,4 +87,7 @@
 #define SLIP_DEBUG                  LWIP_DBG_OFF
 #define DHCP_DEBUG                  LWIP_DBG_OFF
 
+void nettime_set_system_time(uint32_t t, uint64_t us);
+#define SNTP_SET_SYSTEM_TIME_NTP nettime_set_system_time
+
 #endif /* __LWIPOPTS_H__ */
